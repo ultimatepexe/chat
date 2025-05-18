@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="./dist/script.js" defer></script>
+    <title>Chat</title>
+</head>
+<body>
+    <main>
+        <h1>
+            Chat
+        </h1>
+        <ul>
+
+        </ul>
+        <div>
+            <textarea name="postInput" id="postInput" placeholder="Write something... (Crtl + Enter to send)" maxlength="1000"></textarea>
+            <input type="text" name="username" id="username" maxlength="25" placeholder="Username (optional)">
+            <button onclick="post()">
+                POST
+            </button>
+        </div>
+    </main>
+    <script>
+        const textarea = document.getElementById('postInput');
+
+        textarea.addEventListener('input', () => {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        });
+    </script>
+</body>
+</html>
