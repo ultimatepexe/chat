@@ -1,6 +1,3 @@
-
----
-
 # Real-time Chat with Node.js, Express, MongoDB and SSE
 
 This project is a minimalist real-time chat application built with:
