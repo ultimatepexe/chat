@@ -11,9 +11,15 @@ const app = express();
 const clients: Response[] = [];
 
 interface IPost {
+    date: Date;
+    content: string;
+    username: string;
+}
+
+interface IFormatedPost {
     date: string;
     content: string;
-    username?: string;
+    username: string;
 }
 
 app.use(express.json());
@@ -38,28 +44,40 @@ function escapeHtml(str: string): string {
         .replace(/'/g, "&#39;");
 }
 
-function notifyClients(post: IPost) {
+function notifyClients(post: IFormatedPost) {
     for (const client of clients) {
         client.write(`data: ${JSON.stringify(post)}\n\n`);
     }
 }
 
+function formatPost(post: IPost): IFormatedPost {
+    const formatedPost: IFormatedPost = {
+        date: post.date.toLocaleString("en", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+    }),
+    content: escapeHtml(post.content),
+    username: escapeHtml(post.username)
+    }
+    return formatedPost;
+}
+
 app.post("/create", async (req: Request, res: Response): Promise<void> => {
-    const content: string = req.body.content.trim();
-    const username: string = req.body.username.trim();
+    const content: string = (req.body.content || "").trim();
+    const username: string = (req.body.username || "").trim();
     if (content === "" || content.length > 1000) {
         res.status(400).json({ ok: false, error: "Invalid content length" }); return;
     }
     if (username.length > 30) {
         res.status(400).json({ ok: false, error: "Username too long" }); return;
     }
-    const newPost = await createPost(content, username) as IPost;
-    const safePost = {
-        ...newPost,
-        content: escapeHtml(newPost.content),
-        username: escapeHtml(newPost.username ?? "")
-    };
-    notifyClients(safePost);
+    const newPost = formatPost(await createPost(content, username));
+    notifyClients(newPost);
     res.status(201).json({ ok: true });
 });
 

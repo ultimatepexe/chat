@@ -15,12 +15,15 @@ interface IPost {
         const usernameSpan: HTMLSpanElement = document.createElement("span");
         usernameSpan.textContent = `${post.username}`;
         usernameSpan.classList.add("username");
+
         const dateSpan: HTMLSpanElement = document.createElement("span");
         dateSpan.textContent = `${post.date}`;
         dateSpan.classList.add("date");
+        
         postLi.appendChild(usernameSpan); postLi.appendChild(dateSpan);
         const content = document.createTextNode(`${post.content}`);
         const breakRow = document.createElement("br");
+
         postLi.appendChild(breakRow);
         postLi.appendChild(content);
         postList.appendChild(postLi);
