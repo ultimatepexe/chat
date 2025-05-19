@@ -6,10 +6,17 @@ interface IPost {
     username: string;
 }
 
+interface IFormattedPost {
+    date: string;
+    content: string;
+    username: string;
+}
+
 (async () => {
     const response = await fetch("/posts");
     const responseJson = await response.json();
-    const posts: IPost[] = responseJson.posts;
+    const posts: IFormattedPost[] = responseJson.formattedPosts;
+    console.log(posts);
     for (const post of posts) {
         const postLi: HTMLLIElement = document.createElement("li");
         const usernameSpan: HTMLSpanElement = document.createElement("span");

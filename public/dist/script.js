@@ -12,7 +12,8 @@ const postList = document.querySelector("ul");
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield fetch("/posts");
     const responseJson = yield response.json();
-    const posts = responseJson.posts;
+    const posts = responseJson.formattedPosts;
+    console.log(posts);
     for (const post of posts) {
         const postLi = document.createElement("li");
         const usernameSpan = document.createElement("span");

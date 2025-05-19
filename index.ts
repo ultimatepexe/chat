@@ -16,7 +16,7 @@ interface IPost {
     username: string;
 }
 
-interface IFormatedPost {
+interface IFormattedPost {
     date: string;
     content: string;
     username: string;
@@ -31,8 +31,9 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.get("/posts", async (req: Request, res: Response) => {
-    const posts = await loadPosts();
-    res.json({ posts });
+    const posts: IPost[] = await loadPosts();
+    const formattedPosts: IFormattedPost[] = posts.map(formatPost);
+    res.json({ formattedPosts });
 });
 
 function escapeHtml(str: string): string {
@@ -44,14 +45,14 @@ function escapeHtml(str: string): string {
         .replace(/'/g, "&#39;");
 }
 
-function notifyClients(post: IFormatedPost) {
+function notifyClients(post: IFormattedPost) {
     for (const client of clients) {
         client.write(`data: ${JSON.stringify(post)}\n\n`);
     }
 }
 
-function formatPost(post: IPost): IFormatedPost {
-    const formatedPost: IFormatedPost = {
+function formatPost(post: IPost): IFormattedPost {
+    const formattedPost: IFormattedPost = {
         date: post.date.toLocaleString("en", {
         weekday: "long",
         year: "numeric",
@@ -64,7 +65,7 @@ function formatPost(post: IPost): IFormatedPost {
     content: escapeHtml(post.content),
     username: escapeHtml(post.username)
     }
-    return formatedPost;
+    return formattedPost;
 }
 
 app.post("/create", async (req: Request, res: Response): Promise<void> => {
